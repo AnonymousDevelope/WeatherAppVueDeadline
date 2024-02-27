@@ -4,11 +4,12 @@ const WeatherService = {
     getData(long,lat) {
         return axios.get(`https://api.openweathermap.org/data/2.8/onecall?lat=${lat}&lon=${long}&exclude=minutely,hourly,alerts&appid=9dd86907fe501cec50da3d087e4e9dc0&units=metric&lang=ru`);
     },
-    async getCityLonLat(city) {
+    async getCityLonLat(city="tashkent") {
         const responseLatLon = await axios.get(`https://api.openweathermap.org/geo/1.0/direct?q=${city}&appid=9dd86907fe501cec50da3d087e4e9dc0`);
         return {
             lat: responseLatLon.data[0].lat,
-            lon: responseLatLon.data[0].lon
+            lon: responseLatLon.data[0].lon,
+            country: responseLatLon.data[0]?.local_names?.uz || responseLatLon.data[0]?.name
         }
     }
 }

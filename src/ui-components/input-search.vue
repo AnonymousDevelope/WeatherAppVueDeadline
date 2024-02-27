@@ -14,7 +14,6 @@ export default {
         searchText : '',
        }
     },
-
     methods: {
         search(){
             this.$store.dispatch('getLonLat', this.searchText).then(async(res) => {

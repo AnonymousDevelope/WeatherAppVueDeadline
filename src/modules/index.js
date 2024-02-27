@@ -10,6 +10,7 @@ const state = {
     LongLat:{
         lon: null,
         lat: null,
+        country:null,
     }
   };
   

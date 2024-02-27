@@ -11,33 +11,41 @@
           </div>
         </div>
       </div>
-      <div class="row mt-5 justify-center flex">
-        <img data-type="current" src="https://cdn1.iconfinder.com/data/icons/weather-cartoon/512/g10135-512.png" alt="">
-      </div>
-      <div class="row">
-        <div class="current-weather-inform gap-[12px]">
-          <p class="current-temp font-sans">
-            <span class="temp-nmbr font-bold">4</span><sup>°C</sup>
-          </p>
-          <p :class="[styles.grayBold, 'current-event text-[1.5rem]']">Sleet</p>
-          <p :class="[styles.grayBold, 'current-date text-[.8rem]']">Today 26 February</p>
-          <p :class="[styles.grayBold, 'current-location']"><i class="fa fa-map-marker text-[1.5rem]"></i> Tashkent</p>
+      <template v-if="data" class="flex h-full align-middle">
+        <div class="row mt-5 justify-center flex">
+          <img data-type="current" :src="`https://openweathermap.org/img/wn/${icon}@2x.png`" alt="">
         </div>
-      </div>
+        <div class="row">
+          <div class="current-weather-inform gap-[12px]">
+            <p class="current-temp font-sans">
+              <span class="temp-nmbr font-bold">{{ temp }}</span><sup>°C</sup>
+            </p>
+            <p :class="[styles.grayBold, 'current-event text-[1.5rem]']">{{ event }}</p>
+            <p :class="[styles.grayBold, 'current-date text-[.8rem]']">{{ date }}</p>
+            <p :class="[styles.grayBold, 'current-location']"><i class="fa fa-map-marker text-[1.5rem]"></i> {{ country }}
+            </p>
+          </div>
+        </div>
+      </template>
+      <template v-else>
+        <Loading />
+      </template>
     </section>
     <main class="h-full md:min-h-[100vh] md:w-2/3 lg:w-100 max-h-[100vh] overflow-y-scroll">
       <section class="header-main mb-[50px]">
         <div class="flex justify-between">
           <inputSearch />
-          <button @click="isOpen" class="bg-[var(--tw-dark-bg)] hover:border-gray-400 text-white font-bold py-2 px-4 border border-transparent rounded">
+          <button @click="isOpen"
+            class="bg-[var(--tw-dark-bg)] hover:border-gray-400 text-white font-bold py-2 px-4 border border-transparent rounded">
             <i class="fa fa-bars"></i>
           </button>
         </div>
       </section>
-      <div :class="['text-gray-400 font-bold','title']">
+      <div :class="['text-gray-400 font-bold', 'title']">
         Kunlik ob - havo ma'lumoti
       </div>
-      <div class="weather-daily-list 
+      <template v-if="data">
+        <div class="weather-daily-list 
         flex 
         flex-row 
         gap-4 
@@ -45,15 +53,12 @@
         lg:justify-start 
         justify-between
         flex-wrap">
-        <WeatherCardDaily />
-        <WeatherCardDaily />
-        <WeatherCardDaily />
-        <WeatherCardDaily />
-        <WeatherCardDaily />
-        <WeatherCardDaily />
-        <WeatherCardDaily />
-        <WeatherCardDaily />
-      </div>
+          <WeatherCardDaily v-for="day in data?.daily" :key="day.dt" :day="day" />
+        </div>
+      </template>
+      <template v-else>
+        <Loading />
+      </template>
     </main>
     <city-list></city-list>
   </div>
@@ -63,23 +68,44 @@
 import { styles } from './utils';
 import { WeatherCardDaily, CityList } from './components';
 import inputSearch from './ui-components/input-search.vue';
-import {mapState} from 'vuex'
+import { mapState } from 'vuex'
+import { weatherConverter } from '@/utils'
+import Loading from './ui-components/loading.vue';
 export default {
   name: 'App',
   components: {
     WeatherCardDaily,
     inputSearch,
     CityList,
+    Loading
   },
   data() {
     return {
       styles,
       isOpenCard: false,
+      weatherConverter,
     }
+  },
+  computed: {
+    ...mapState({
+      data: state => state.modules.data,
+      current: state => state.modules.data?.current,
+      icon: state => state.modules.data?.current?.weather[0]?.icon,
+      temp: state => state.modules.data?.current?.temp,
+      country: state => state.modules.LongLat?.country,
+      event: state => state.modules.data?.current?.weather[0]?.main,
+      date: state => weatherConverter.dateConvert(state.modules.data?.current?.dt).toString(),
+    })
+  },
+  mounted() {
+    this.$store.dispatch('getLonLat', 'tashkent').then(async (res) => {
+      await this.$store.dispatch('getData', res);
+    });
   },
   methods: {
     isOpen() {
       this.$store.commit('toggleOpenCard', true);
+      console.log(this.icon);
     }
   }
 }
@@ -143,18 +169,20 @@ $background-color_2: var(--bg-notification);
 main {
   padding: 30px 70px;
   padding-right: 30px;
+
   .title {
     font-size: 1.5rem;
     margin: 20px 0;
   }
+
   &::-webkit-scrollbar {
     display: none;
   }
+
   .weather-daily-list {
     width: 100%;
   }
-  .header-main {
 
-  }
+  .header-main {}
 }
 </style>

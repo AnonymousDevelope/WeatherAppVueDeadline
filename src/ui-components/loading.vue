@@ -16,13 +16,27 @@ export default {
         display: flex;
         align-items: center;
         justify-content: center;
-        width: 100%;
-        background-color: rgba(255, 255, 255, 0.8);
+        width: fit-content;
+        margin: auto;
+        background-color: transparent;
+        transform: translate(100%,100%);
+        border-radius: 50%;
+        border-top:5px solid #fff;
+        border-left:5px solid #fff;
+        animation: spinner 1s linear infinite;
     }
     .loading .spinner-border{
         width: 5rem;
         height: 5rem;
         border-left: var(--primary);
         border-right: var(--primary);
+    }
+    @keyframes spinner {
+        0% {
+            transform: rotate(0deg);
+        }
+        100% {
+            transform: rotate(360deg);
+        }
     }
 </style>
