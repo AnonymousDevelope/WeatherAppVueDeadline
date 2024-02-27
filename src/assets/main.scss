@@ -1,0 +1,19 @@
+@import "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css";
+:root {
+	--primary: #3b82f6;
+	--secondary: rgb(209, 255, 255);
+	--white: #fff;
+	--font: monospace;
+	--tw-dark-bg: #111827;
+	--dark-bg: #020817;
+	--bg-notification: rgba(255, 255, 255, 0.1);
+	--text-color-two:rgba(255, 255, 255, 0.9);
+}
+$background-color_1: var(--dark-bg);
+#app {
+	max-width: 1280px;
+	min-width: 320px;
+	width: 100%;
+	background-color: $background-color_1;
+	overflow-x: hidden;
+}
