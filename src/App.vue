@@ -6,6 +6,14 @@
           <div class="notif">
             <span>Search for places</span>
           </div>
+          <div class="notif cursor-pointer">
+            <a class="text-white no-underline transition-all font-mono font-bold text-[17px]" 
+            href="https://t.me/IT_TECHNOLOGY_01" target="_blank">
+              <i class="fa fa-bell"></i>
+              My Telegram
+              <i class="fa fa-telegram"></i>
+            </a>
+          </div>
           <div class="notif">
             <span><i class="fa fa-map-marker"></i></span>
           </div>
